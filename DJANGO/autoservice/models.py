@@ -44,12 +44,19 @@ class Paslauga(models.Model):
 
 
 class Uzsakymas(models.Model):
+    STATUSO_BUSENA = [
+        ('nepradetas', 'Nepradetas'),
+        ('vykdomas', 'Vykdomas'),
+        ('uzbaigtas', 'Uzbaigtas'),
+        ('atsauktas', 'Atsauktas')
+    ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     data = models.DateField('Data', auto_now_add=True)
     automobilis = models.ForeignKey(Automobilis, on_delete=models.CASCADE)
+    statusas = models.CharField(max_length=20, choices=STATUSO_BUSENA, default='nepradetas')
 
     def __str__(self):
-        return f"Užsakymas {self.id} ({self.data})"
+        return f"Užsakymas {self.id} ({self.data}) - {self.statusas}"
 
     class Meta:
         verbose_name = "Užsakymas"

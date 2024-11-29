@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Rajono autoservisas</h1>
+  <p>Sveiki atvykę į servisa!</p>
+  <p>Serviso statistika:</p>
+  <ul>
+    <li><strong>Paslaugos:</strong> {{ paslaugu_kiekis }}</li>
+    <li><strong>Atlikti uzsakymai:</strong> {{ atliktu_uzsakymu_kiekis }}</li>
+    <li><strong>Automobiliu kiekis:</strong> {{ automobiliu_kiekis }}</li>
+  </ul>
+{% endblock %}
