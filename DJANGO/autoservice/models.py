@@ -45,10 +45,10 @@ class Paslauga(models.Model):
 
 class Uzsakymas(models.Model):
     STATUSO_BUSENA = [
-        ('nepradetas', 'Nepradetas'),
+        ('nepradetas', 'Nepradėtas'),
         ('vykdomas', 'Vykdomas'),
-        ('uzbaigtas', 'Uzbaigtas'),
-        ('atsauktas', 'Atsauktas')
+        ('uzbaigtas', 'Užbaigtas'),
+        ('atsauktas', 'Atšauktas')
     ]
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     data = models.DateField('Data', auto_now_add=True)

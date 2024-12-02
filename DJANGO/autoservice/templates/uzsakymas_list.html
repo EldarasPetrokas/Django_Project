@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Užsakymų sąrašas</h1>
+  {% if uzsakymas_list %}
+  <ul>
+    {% for uzsakymas in uzsakymas_list %}
+      <li>
+        <a href="{{ uzsakymas.id }}">{{ uzsakymas.data }} {{uzsakymas.statusas}} </a>
+      </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p>Autoservise šiuo metu nėra užsakymų</p>
+  {% endif %}
+{% endblock %}
