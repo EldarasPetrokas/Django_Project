@@ -1,5 +1,9 @@
+from datetime import date
+from tinymce.models import HTMLField
 from django.db import models
+from django.contrib.auth.models import User
 import uuid
+from PIL import Image
 
 
 class AutomobilioModelis(models.Model):
@@ -21,6 +25,8 @@ class Automobilis(models.Model):
     automobilio_modelis = models.ForeignKey(AutomobilioModelis, on_delete=models.CASCADE)
     vin_kodas = models.CharField('VIN kodas', max_length=17)
     klientas = models.CharField('Klientas', max_length=255)
+    nuotrauka = models.ImageField('Nuotrauka', upload_to='automobiliai/', null=True, blank=True)
+    aprasymas = HTMLField('Aprašymas', null=True, blank=True)
 
     def __str__(self):
         return f"{self.valstybinis_nr} ({self.klientas})"
@@ -54,6 +60,14 @@ class Uzsakymas(models.Model):
     data = models.DateField('Data', auto_now_add=True)
     automobilis = models.ForeignKey(Automobilis, on_delete=models.CASCADE)
     statusas = models.CharField(max_length=20, choices=STATUSO_BUSENA, default='nepradetas')
+    vartotojas = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    grazinimo_terminas = models.DateField('Gražinimo terminas', null=True, blank=True)
+
+    @property
+    def is_overdue(self):
+        if self.grazinimo_terminas and date.today() > self.grazinimo_terminas:
+            return True
+        return False
 
     def __str__(self):
         return f"Užsakymas {self.id} ({self.data}) - {self.statusas}"
@@ -75,3 +89,33 @@ class UzsakymoEilute(models.Model):
     class Meta:
         verbose_name = "Užsakymo eilutė"
         verbose_name_plural = "Užsakymo eilutės"
+
+
+class UzsakymoKomentaras(models.Model):
+    uzsakymas = models.ForeignKey('Uzsakymas', on_delete=models.CASCADE, related_name='komentaras')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField(max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.uzsakymas}'
+
+
+class Profilis(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nuotrauka = models.ImageField(default="profile_pics/default.png", upload_to="profile_pics")
+
+    class Meta:
+        verbose_name = "Profilis"
+        verbose_name_plural = "Profiliai"
+
+    def __str__(self):
+        return f"{self.user.username} profilis"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.nuotrauka.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.nuotrauka.path)

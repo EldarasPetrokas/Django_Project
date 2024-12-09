@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Prisijungimas</h1>
+  {% if form.errors %}
+    <p>Prisijungimo klaida. Bandykite dar kartą.</p>
+  {% endif %}
+  <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+    <table>
+      <tr>
+        <td>Vartotojo vardas:</td>
+        <td>{{ form.username }}</td>
+      </tr>
+      <tr>
+        <td>Slaptažodis:</td>
+        <td>{{ form.password }}</td>
+      </tr>
+    </table>
+    <input type="submit" value="Prisijungti">
+  </form>
+{% endblock %}

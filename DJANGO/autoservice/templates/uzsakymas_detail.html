@@ -1,8 +1,27 @@
 {% extends "base.html" %}
+
 {% block content %}
-  <h1>{{ uzsakymas.id }}</h1>
-  <hr>
-  <p><strong>Data:</strong> {{ uzsakymas.data }}</p>
-  <p><strong>Automobilis:</strong> {{ uzsakymas.automobilis }}</p>
-  <p><strong>Statusas:</strong> {{ uzsakymas.statusas }}</p>
+    <h1>Užsakymo detalės</h1>
+    <p><strong>Užsakymas:</strong> {{ uzsakymas }}</p>
+
+    <h2>Komentarai:</h2>
+    {% for comment in uzsakymas.comments.all %}
+        <div>
+            <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+            <small>{{ comment.created_at }}</small>
+        </div>
+    {% empty %}
+        <p>Kol kas nėra komentarų.</p>
+    {% endfor %}
+
+    {% if user.is_authenticated %}
+        <h3>Palikite komentarą</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Siųsti</button>
+        </form>
+    {% else %}
+        <p>Norėdami komentuoti, turite <a href="{% url 'login' %}">prisijungti</a>.</p>
+    {% endif %}
 {% endblock %}

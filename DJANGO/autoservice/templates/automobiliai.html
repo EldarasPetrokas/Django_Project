@@ -1,9 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Automobiliai</h1>
-  <p>Visi servise užregistruoti automobiliai:</p>
-  {% for a in automobiliai %}
-    <li><a href="{% url 'automobilis' a.id %}">{{a.automobilio_modelis}}</a></li>
+<h1>Automobilių sąrašas</h1>
+<ul>
+    {% for automobilis in automobiliai %}
+    <li>
+        <strong>Valstybinis numeris:</strong>
+        <a href="{% url 'automobilis' automobilis.id %}">
+            {{ automobilis.valstybinis_nr }}
+        </a><br>
+        <strong>Modelis:</strong> {{ automobilis.automobilio_modelis }}<br>
+        <strong>Savininkas:</strong> {{ automobilis.klientas }}<br>
+        {% if automobilis.nuotrauka %}
+        <img src="{{ automobilis.nuotrauka.url }}" alt="Automobilio nuotrauka"
+             style="max-width: 200px; height: auto;"><br>
+        {% endif %}
+    </li>
     {% endfor %}
+
+</ul>
+
+<div class="pagination">
+    {% if automobiliai.has_previous %}
+    <a href="?page=1">&laquo; pirmas</a>
+    <a href="?page={{ automobiliai.previous_page_number }}">atgal</a>
+    {% endif %}
+
+    <span>{{ automobiliai.number }} iš {{ automobiliai.paginator.num_pages }}</span>
+
+    {% if automobiliai.has_next %}
+    <a href="?page={{ automobiliai.next_page_number }}">pirmyn</a>
+    <a href="?page={{ automobiliai.paginator.num_pages }}">paskutinis &raquo;</a>
+    {% endif %}
+</div>
 {% endblock %}

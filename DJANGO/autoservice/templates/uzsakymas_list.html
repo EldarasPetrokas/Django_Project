@@ -2,15 +2,28 @@
 
 {% block content %}
   <h1>Užsakymų sąrašas</h1>
-  {% if uzsakymas_list %}
   <ul>
-    {% for uzsakymas in uzsakymas_list %}
-      <li>
-        <a href="{{ uzsakymas.id }}">{{ uzsakymas.data }} {{uzsakymas.statusas}} </a>
-      </li>
+    {% for uzsakymas in uzsakymai %}
+        <li>
+            <a href="{% url 'uzsakymas_detail' uzsakymas.id %}">
+                Užsakymo ID: {{ uzsakymas.id }}
+            </a>, Data: {{ uzsakymas.date }}, Automobilis: {{ uzsakymas.automobilis }} ({{ uzsakymas.automobilis.klientas }})
+        </li>
     {% endfor %}
-  </ul>
-  {% else %}
-    <p>Autoservise šiuo metu nėra užsakymų</p>
-  {% endif %}
+</ul>
+
+
+  <div class="pagination">
+    {% if page_obj.has_previous %}
+      <a href="?page=1">&laquo; pirmas</a>
+      <a href="?page={{ page_obj.previous_page_number }}">atgal</a>
+    {% endif %}
+
+    <span>{{ page_obj.number }} iš {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">pirmyn</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">paskutinis &raquo;</a>
+    {% endif %}
+  </div>
 {% endblock %}

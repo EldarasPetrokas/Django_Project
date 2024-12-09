@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Mano Užsakymai</h1>
+
+    {% if uzsakymai %}
+        <ul class="list-group">
+            {% for uzsakymas in uzsakymai %}
+                <li class="list-group-item {% if uzsakymas.is_overdue %}text-danger{% endif %}">
+                    <div class="d-flex align-items-center">
+                        <img class="rounded-circle me-3" src="{{ user.profilis.nuotrauka.url }}" alt="Vartotojo nuotrauka" style="width: 50px; height: 50px; object-fit: cover;">
+                        <div>
+                            <strong>Automobilis:</strong> {{ uzsakymas.automobilis.valstybinis_nr }}<br>
+                            <strong>Gražinimo terminas:</strong> {{ uzsakymas.grazinimo_terminas }}<br>
+                            <a href="{% url 'uzsakymas_detail' uzsakymas.id %}" class="btn btn-sm btn-primary mt-2">Peržiūrėti detales</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Šiuo metu neturite aktyvių užsakymų.</p>
+    {% endif %}
+{% endblock %}
